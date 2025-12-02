@@ -22,6 +22,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       max-width: 800px;
       width: 100%;
+      margin: 1rem;
     }
     h1, h2 {
       text-align: center;
@@ -70,6 +71,29 @@
       border-radius: 4px;
       padding: 1rem;
       margin-top: 1rem;
+    }
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    .btn {
+      background-color: #76c7c0;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
@@ -316,13 +340,32 @@
         optionsEl.appendChild(optionEl);
       });
 
+      const navigationEl = document.createElement('div');
+      navigationEl.className = 'navigation';
+
+      const backButton = document.createElement('button');
+      backButton.className = 'btn';
+      backButton.innerText = 'Back';
+      backButton.disabled = currentQuestion === 0;
+      backButton.addEventListener('click', () => {
+        if (currentQuestion > 0) {
+          answers.pop();
+          currentQuestion--;
+          updateProgress();
+          showQuestion();
+        }
+      });
+
+      navigationEl.appendChild(backButton);
+
       questionContainer.innerHTML = '';
       questionContainer.appendChild(questionEl);
       questionContainer.appendChild(optionsEl);
+      questionContainer.appendChild(navigationEl);
     }
 
     function updateProgress() {
-      const progressPercentage = Math.round((currentQuestion / questions.length) * 100);
+      const progressPercentage = Math.round(((currentQuestion) / questions.length) * 100);
       progressEl.style.width = `${progressPercentage}%`;
       progressEl.innerText = `${progressPercentage}%`;
     }
